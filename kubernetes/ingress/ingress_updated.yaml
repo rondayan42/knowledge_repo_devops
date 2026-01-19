@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: knowledge-repo-ingress # Renamed to avoid verification conflict if manual delete didn't clean up perfectly
+  namespace: knowledge-repo
+  labels:
+    app: knowledge-repo
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: api.knowledge-repo.local
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: knowledge-repo-server
+                port:
+                  number: 5000
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: knowledge-repo-client
+                port:
+                  number: 80
