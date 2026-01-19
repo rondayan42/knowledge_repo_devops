@@ -14,28 +14,35 @@ spec:
         app: knowledge-repo-server
     spec:
       containers:
-      - name: knowledge-repo-server
-        image: knowledge-repo-server:latest
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 5000
-          name: http
-        envFrom:
-        - configMapRef:
-            name: knowledge-repo-server-config
-        - secretRef:
-            name: knowledge-repo-server-secrets
-        resources:
-          requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
-            cpu: 500m
-            memory: 512Mi
-        volumeMounts:
-        - name: uploads
-          mountPath: /app/uploads
+        - name: knowledge-repo-server
+          image: knowledge-repo-server:latest
+          imagePullPolicy: Never
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "🔄 Starting initialization..." &&
+              python -c "from database import init_db; from app import seed_default_data; init_db(); seed_default_data()" &&
+              echo "✅ Initialization done. Starting Gunicorn..." &&
+              gunicorn -c gunicorn.conf.py app:app
+          ports:
+            - containerPort: 5000
+              name: http
+          envFrom:
+            - configMapRef:
+                name: knowledge-repo-server-config
+            - secretRef:
+                name: knowledge-repo-server-secrets
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          volumeMounts:
+            - name: uploads
+              mountPath: /app/uploads
       volumes:
-      - name: uploads
-        persistentVolumeClaim:
-          claimName: knowledge-repo-uploads
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: knowledge-repo-uploads
