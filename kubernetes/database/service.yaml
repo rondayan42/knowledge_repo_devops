@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: knowledge-repo-db
+  namespace: knowledge-repo
+  labels:
+    app: knowledge-repo-db
+spec:
+  type: ClusterIP
+  selector:
+    app: knowledge-repo-db
+  ports:
+    - port: 5432
+      targetPort: 5432
+      name: postgres

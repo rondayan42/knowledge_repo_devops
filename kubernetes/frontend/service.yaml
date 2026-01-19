@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: knowledge-repo-client
+  namespace: knowledge-repo
+spec:
+  type: ClusterIP
+  selector:
+    app: knowledge-repo-client
+  ports:
+  - port: 80
+    targetPort: 8080
