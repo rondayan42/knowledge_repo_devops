@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: knowledge-repo-ingress # Renamed to avoid verification conflict if manual delete didn't clean up perfectly
+  name: knowledge-repo-ingress
   namespace: knowledge-repo
   labels:
     app: knowledge-repo
