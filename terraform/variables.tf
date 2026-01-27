@@ -15,3 +15,15 @@ variable "region" {
   type        = string
   default     = "il-central-1"
 }
+
+variable "server_replicas" {
+  description = "Number of server replicas"
+  type        = number
+  default     = 2
+}
+
+variable "client_replicas" {
+  description = "Number of client replicas"
+  type        = number
+  default     = 2
+}

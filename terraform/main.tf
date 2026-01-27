@@ -39,4 +39,6 @@ module "kubernetes_resources" {
   environment             = terraform.workspace
   image_repository_server = module.registry.repository_urls["knowledge-repo-server"]
   image_repository_client = module.registry.repository_urls["knowledge-repo-client"]
+  server_replicas         = var.server_replicas
+  client_replicas         = var.client_replicas
 }
