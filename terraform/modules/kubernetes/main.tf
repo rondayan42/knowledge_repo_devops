@@ -13,7 +13,7 @@ provider "kubernetes" {
 
 resource "kubernetes_namespace_v1" "knowledge_repo" {
   metadata {
-    name = var.namespace_name
+    name = "${var.namespace_name}-${var.environment}"
   }
 }
 
@@ -195,6 +195,8 @@ resource "kubernetes_persistent_volume_claim_v1" "knowledge_repo_uploads" {
 }
 
 resource "kubernetes_deployment_v1" "knowledge_repo_server" {
+  wait_for_rollout = false
+
   metadata {
     name      = "knowledge-repo-server"
     namespace = kubernetes_namespace_v1.knowledge_repo.metadata[0].name
@@ -220,10 +222,13 @@ resource "kubernetes_deployment_v1" "knowledge_repo_server" {
       }
 
       spec {
+        image_pull_secrets {
+          name = "regcred"
+        }
         container {
           name              = "knowledge-repo-server"
-          image             = var.server_image
-          image_pull_policy = "Never" # Assuming local development or direct availability
+          image             = "${var.image_repository_server}:latest"
+          image_pull_policy = "Always"
 
           command = ["/bin/sh", "-c"]
           args = [
@@ -306,6 +311,8 @@ resource "kubernetes_service_v1" "knowledge_repo_server" {
 }
 
 resource "kubernetes_deployment_v1" "knowledge_repo_client" {
+  wait_for_rollout = false
+
   metadata {
     name      = "knowledge-repo-client"
     namespace = kubernetes_namespace_v1.knowledge_repo.metadata[0].name
@@ -331,10 +338,13 @@ resource "kubernetes_deployment_v1" "knowledge_repo_client" {
       }
 
       spec {
+        image_pull_secrets {
+          name = "regcred"
+        }
         container {
           name              = "knowledge-repo-client"
-          image             = var.client_image
-          image_pull_policy = "Never"
+          image             = "${var.image_repository_client}:latest"
+          image_pull_policy = "Always"
 
           port {
             container_port = 8080

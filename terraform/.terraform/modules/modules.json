@@ -1,1 +1,1 @@
-{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"kubernetes_resources","Source":"./modules/kubernetes","Dir":"modules/kubernetes"}]}
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"kubernetes_resources","Source":"./modules/kubernetes","Dir":"modules/kubernetes"},{"Key":"registry","Source":"./modules/registry","Dir":"modules/registry"}]}
